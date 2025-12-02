@@ -71,10 +71,49 @@ O sistema possui 4 entidades principais:
 - **Pedido** - Solicitações de itens necessários
 - **Match** - Conexão entre item e pedido
 
+## Endpoints da API
+
+### Usuario Controller
+- `GET /api/v1/usuario` - Listar todos os usuários
+- `POST /api/v1/usuario` - Criar novo usuário
+- `GET /api/v1/usuario/{id}` - Buscar usuário por ID
+- `PATCH /api/v1/usuario/{id}` - Atualizar usuário
+- `DELETE /api/v1/usuario/{id}` - Deletar usuário
+- `GET /api/v1/usuario/{id}/pedidos` - Listar pedidos do usuário
+- `GET /api/v1/usuario/{id}/itens` - Listar itens do usuário
+
+### Pedido Controller
+- `GET /pedido` - Listar todos os pedidos
+- `POST /pedido` - Criar novo pedido
+- `GET /pedido/{id}` - Buscar pedido por ID
+- `PATCH /pedido/{id}` - Atualizar pedido
+- `DELETE /pedido/{id}` - Deletar pedido
+- `GET /pedido/buscar-por-usuario/{idUsuario}` - Buscar pedidos por usuário
+
+### Item Controller
+- `GET /itens` - Listar todos os itens
+- `POST /itens` - Criar novo item
+- `GET /itens/{id}` - Buscar item por ID
+- `PATCH /itens/{id}` - Atualizar item
+- `DELETE /itens/{id}` - Deletar item
+
+### Match Controller
+- `GET /api/v1/matches` - Listar todos os matches
+- `GET /api/v1/matches/{id}` - Buscar match por ID
+- `GET /api/v1/matches/pendentes` - Listar matches pendentes
+- `GET /api/v1/matches/ativos` - Listar matches ativos
+- `POST /api/v1/matches/criar` - Criar novo match
+- `PATCH /api/v1/matches/{idMatch}/doador/{idUsuario}/aceitar` - Doador aceita match
+- `PATCH /api/v1/matches/{idMatch}/doador/{idUsuario}/recusar` - Doador recusa match
+- `PATCH /api/v1/matches/{idMatch}/solicitante/{idUsuario}/aceitar` - Solicitante aceita match
+- `PATCH /api/v1/matches/{idMatch}/solicitante/{idUsuario}/recusar` - Solicitante recusa match
+
+**Documentação completa com Swagger UI:**
+- Interface interativa: `http://localhost:8080/api/swagger-ui/index.html`
+- Especificação OpenAPI: `http://localhost:8080/api/docs`
+
 ## Autor
 
 **José Augusto da Silva Rocha** - IFRN
 
 ---
-
-Projeto desenvolvido como atividade acadêmica.
