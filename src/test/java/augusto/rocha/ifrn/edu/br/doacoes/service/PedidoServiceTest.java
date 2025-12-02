@@ -46,7 +46,7 @@ class PedidoServiceTest {
     }
 
     @Test
-    void criar_DeveSalvarComStatusAberto() {
+    void test_criar_deve_salvar_com_status_aberto() {
         Pedido novo = new Pedido();
         when(pedidoRepository.save(novo)).thenReturn(pedido);
 
@@ -57,7 +57,7 @@ class PedidoServiceTest {
     }
 
     @Test
-    void buscaPorId_Existente_DeveRetornarPedido() {
+    void test_busca_por_id_com_id_existente_deve_retornar_pedido() {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
 
         Pedido encontrado = pedidoService.buscaPorId(1L);
@@ -66,14 +66,14 @@ class PedidoServiceTest {
     }
 
     @Test
-    void buscaPorId_Inexistente_DeveLancarException() {
+    void test_busca_por_id_com_id_inexistente_deve_lancar_exception() {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> pedidoService.buscaPorId(1L));
     }
 
     @Test
-    void listarTodos_DeveRetornarLista() {
+    void test_listar_todos_deve_retornar_lista() {
         when(pedidoRepository.findAll()).thenReturn(List.of(pedido));
 
         List<Pedido> lista = pedidoService.ListarTodos();
@@ -83,7 +83,7 @@ class PedidoServiceTest {
     }
 
     @Test
-    void listarPorStatus_DeveRetornarLista() {
+    void test_listar_por_status_deve_retornar_lista() {
         when(pedidoRepository.findByStatus(StatusPedido.ABERTO)).thenReturn(List.of(pedido));
 
         List<Pedido> pedidos = pedidoService.ListarPorStatus(StatusPedido.ABERTO);
@@ -93,7 +93,7 @@ class PedidoServiceTest {
     }
 
     @Test
-    void buscarPorSolicitante_DeveRetornarLista() {
+    void test_buscar_por_solicitante_deve_retornar_lista() {
         when(pedidoRepository.findBySolicitante(usuario)).thenReturn(List.of(pedido));
 
         List<Pedido> pedidos = pedidoService.buscarPorSolicitante(usuario);
@@ -103,7 +103,7 @@ class PedidoServiceTest {
     }
 
     @Test
-    void buscaPorTitulo_DeveRetornarLista() {
+    void test_busca_por_titulo_deve_retornar_lista() {
         when(pedidoRepository.findByTitulo("Pedido de Roupa")).thenReturn(List.of(pedido));
 
         List<Pedido> pedidos = pedidoService.buscaPorTitulo("Pedido de Roupa");
@@ -113,7 +113,7 @@ class PedidoServiceTest {
     }
 
     @Test
-    void atualizar_DeveAtualizarDados() {
+    void test_atualizar_deve_atualizar_dados() {
         Pedido novosDados = new Pedido();
         Usuario novoSolicitante = new Usuario();
         novoSolicitante.setId(2L);
@@ -137,7 +137,7 @@ class PedidoServiceTest {
     }
 
     @Test
-    void deletar_Existente_DeveDeletar() {
+    void test_deletar_com_id_existente_deve_deletar() {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
 
         pedidoService.deletar(1L);
@@ -146,7 +146,7 @@ class PedidoServiceTest {
     }
 
     @Test
-    void deletar_Inexistente_DeveLancarException() {
+    void test_deletar_com_id_inexistente_deve_lancar_exception() {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> pedidoService.deletar(1L));

@@ -45,7 +45,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void criar_DeveSalvarItem() {
+    void test_criar_deve_salvar_item() {
         when(itemRepository.save(item)).thenReturn(item);
 
         Item resultado = itemService.criar(item);
@@ -55,7 +55,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void listarTodos_DeveRetornarLista() {
+    void test_listar_todos_deve_retornar_lista() {
         when(itemRepository.findAll()).thenReturn(List.of(item));
 
         List<Item> lista = itemService.listarTodos();
@@ -65,7 +65,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void buscaPorId_Existente_DeveRetornarItem() {
+    void test_busca_por_id_com_id_existente_deve_retornar_item() {
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
 
         Item encontrado = itemService.buscaPorId(1L);
@@ -74,14 +74,14 @@ class ItemServiceTest {
     }
 
     @Test
-    void buscaPorId_Inexistente_DeveLancarException() {
+    void test_busca_por_id_com_id_inexistente_deve_lancar_exception() {
         when(itemRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> itemService.buscaPorId(1L));
     }
 
     @Test
-    void buscarPorCategoria_DeveRetornarLista() {
+    void test_buscar_por_categoria_deve_retornar_lista() {
         when(itemRepository.findByCategoria(Categoria.ELETRONICOS)).thenReturn(List.of(item));
 
         List<Item> itens = itemService.buscarPorCategoria(Categoria.ELETRONICOS);
@@ -91,7 +91,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void buscarPorStatus_DeveRetornarLista() {
+    void test_buscar_por_status_deve_retornar_lista() {
         when(itemRepository.findByStatus(StatusItem.DISPONIVEL)).thenReturn(List.of(item));
 
         List<Item> itens = itemService.buscarPorStatus(StatusItem.DISPONIVEL);
@@ -101,7 +101,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void atualizar_DeveAtualizarDados() {
+    void test_atualizar_deve_atualizar_dados() {
         Item novos = new Item();
         Usuario novoDoador = new Usuario();
         novoDoador.setId(2L);
@@ -127,7 +127,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void deletar_Existente_DeveDeletar() {
+    void test_deletar_com_id_existente_deve_deletar() {
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
 
         itemService.deletar(1L);
@@ -136,7 +136,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void deletar_Inexistente_DeveLancarException() {
+    void test_deletar_com_id_inexistente_deve_lancar_exception() {
         when(itemRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> itemService.deletar(1L));

@@ -49,7 +49,6 @@ public class PedidoController {
         return ResponseEntity.ok(lista);
     }
 
-    // DTO simples para criar pedido apenas com id do usuário
     public static class CriarPedidoDTO {
         public Long solicitanteId;
         public String titulo;

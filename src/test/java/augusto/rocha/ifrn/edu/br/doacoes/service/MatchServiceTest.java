@@ -59,7 +59,7 @@ class MatchServiceTest {
     }
 
     @Test
-    void criar_DeveCriarMatchComItemReservado() {
+    void test_criar_deve_criar_match_com_item_reservado() {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
         when(itemRepository.findById(2L)).thenReturn(Optional.of(item));
         when(matchRepository.existsByItemIdAndStatus(2L, StatusMatch.PENDENTE)).thenReturn(false);
@@ -79,7 +79,7 @@ class MatchServiceTest {
     }
 
     @Test
-    void criar_DeveLancarErro_SeItemNaoDisponivel() {
+    void test_criar_deve_lancar_erro_se_item_nao_disponivel() {
         item.setStatus(StatusItem.DOADO);
 
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
@@ -89,7 +89,7 @@ class MatchServiceTest {
     }
 
     @Test
-    void criar_DeveLancarErro_SeCategoriasDiferirem() {
+    void test_criar_deve_lancar_erro_se_categorias_diferirem() {
         item.setCategoria(Categoria.ELETRONICOS);
 
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
@@ -99,7 +99,7 @@ class MatchServiceTest {
     }
 
     @Test
-    void criar_DeveLancarErro_SeItemJaEstiverEmMatchPendente() {
+    void test_criar_deve_lancar_erro_se_item_ja_estiver_em_match_pendente() {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
         when(itemRepository.findById(2L)).thenReturn(Optional.of(item));
         when(matchRepository.existsByItemIdAndStatus(2L, StatusMatch.PENDENTE)).thenReturn(true);

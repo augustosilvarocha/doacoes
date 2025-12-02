@@ -1,7 +1,6 @@
 package augusto.rocha.ifrn.edu.br.doacoes.repository;
 
 import augusto.rocha.ifrn.edu.br.doacoes.model.*;
-import augusto.rocha.ifrn.edu.br.doacoes.model.enums.StatusItem;
 import augusto.rocha.ifrn.edu.br.doacoes.model.enums.StatusMatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 
