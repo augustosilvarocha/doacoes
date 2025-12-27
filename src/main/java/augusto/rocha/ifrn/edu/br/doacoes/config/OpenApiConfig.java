@@ -21,10 +21,6 @@ public class OpenApiConfig {
                                 .name("Augusto Rocha")
                                 .email("seuemail@exemplo.com")
                         )
-                )
-                .externalDocs(new ExternalDocumentation()
-                        .description("Repositório do projeto")
-                        .url("https://github.com/seuusuario/doacoes")
                 );
     }
 }

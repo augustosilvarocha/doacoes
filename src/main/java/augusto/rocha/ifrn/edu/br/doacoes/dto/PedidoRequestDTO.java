@@ -1,22 +1,24 @@
 package augusto.rocha.ifrn.edu.br.doacoes.dto;
 
 import augusto.rocha.ifrn.edu.br.doacoes.model.Pedido;
+import augusto.rocha.ifrn.edu.br.doacoes.model.Usuario;
 import augusto.rocha.ifrn.edu.br.doacoes.model.enums.Categoria;
-import augusto.rocha.ifrn.edu.br.doacoes.model.enums.StatusPedido;
 import lombok.Data;
 
 @Data
 public class PedidoRequestDTO {
+
+    private Long solicitanteId;
     private String titulo;
     private String descricao;
-    private String categoria;
+    private Categoria categoria;
 
-    public Pedido toEntity() {
+    public Pedido toEntity(Usuario solicitante) {
         Pedido pedido = new Pedido();
+        pedido.setSolicitante(solicitante);
         pedido.setTitulo(this.titulo);
         pedido.setDescricao(this.descricao);
-        pedido.setCategoria(Categoria.valueOf(this.categoria.toUpperCase()));
-        pedido.setStatus(StatusPedido.ABERTO);
+        pedido.setCategoria(this.categoria);
         return pedido;
     }
 }

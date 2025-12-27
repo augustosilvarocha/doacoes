@@ -1,5 +1,6 @@
 package augusto.rocha.ifrn.edu.br.doacoes.service;
 
+import augusto.rocha.ifrn.edu.br.doacoes.exception.ResourceNotFoundException;
 import augusto.rocha.ifrn.edu.br.doacoes.model.Pedido;
 import augusto.rocha.ifrn.edu.br.doacoes.model.Usuario;
 import augusto.rocha.ifrn.edu.br.doacoes.model.enums.Categoria;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +48,11 @@ class PedidoServiceTest {
     @Test
     void test_criar_deve_salvar_com_status_aberto() {
         Pedido novo = new Pedido();
+        novo.setTitulo("Pedido de Roupa");
+        novo.setDescricao("Casaco de frio");
+        novo.setSolicitante(usuario);
+        novo.setCategoria(Categoria.ROUPA);
+
         when(pedidoRepository.save(novo)).thenReturn(pedido);
 
         Pedido resultado = pedidoService.criar(novo);
@@ -60,7 +65,7 @@ class PedidoServiceTest {
     void test_busca_por_id_com_id_existente_deve_retornar_pedido() {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
 
-        Pedido encontrado = pedidoService.buscaPorId(1L);
+        Pedido encontrado = pedidoService.buscarPorId(1L);
 
         assertEquals(pedido, encontrado);
     }
@@ -69,14 +74,15 @@ class PedidoServiceTest {
     void test_busca_por_id_com_id_inexistente_deve_lancar_exception() {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> pedidoService.buscaPorId(1L));
+        assertThrows(ResourceNotFoundException.class,
+                () -> pedidoService.buscarPorId(1L));
     }
 
     @Test
     void test_listar_todos_deve_retornar_lista() {
         when(pedidoRepository.findAll()).thenReturn(List.of(pedido));
 
-        List<Pedido> lista = pedidoService.ListarTodos();
+        List<Pedido> lista = pedidoService.listarTodos();
 
         assertEquals(1, lista.size());
         verify(pedidoRepository).findAll();
@@ -86,7 +92,7 @@ class PedidoServiceTest {
     void test_listar_por_status_deve_retornar_lista() {
         when(pedidoRepository.findByStatus(StatusPedido.ABERTO)).thenReturn(List.of(pedido));
 
-        List<Pedido> pedidos = pedidoService.ListarPorStatus(StatusPedido.ABERTO);
+        List<Pedido> pedidos = pedidoService.listarPorStatus(StatusPedido.ABERTO);
 
         assertEquals(1, pedidos.size());
         verify(pedidoRepository).findByStatus(StatusPedido.ABERTO);
@@ -106,7 +112,7 @@ class PedidoServiceTest {
     void test_busca_por_titulo_deve_retornar_lista() {
         when(pedidoRepository.findByTitulo("Pedido de Roupa")).thenReturn(List.of(pedido));
 
-        List<Pedido> pedidos = pedidoService.buscaPorTitulo("Pedido de Roupa");
+        List<Pedido> pedidos = pedidoService.buscarPorTitulo("Pedido de Roupa");
 
         assertEquals(1, pedidos.size());
         verify(pedidoRepository).findByTitulo("Pedido de Roupa");
@@ -115,13 +121,9 @@ class PedidoServiceTest {
     @Test
     void test_atualizar_deve_atualizar_dados() {
         Pedido novosDados = new Pedido();
-        Usuario novoSolicitante = new Usuario();
-        novoSolicitante.setId(2L);
-
         novosDados.setTitulo("Novo Pedido");
         novosDados.setDescricao("Nova descrição");
         novosDados.setCategoria(Categoria.ELETRONICOS);
-        novosDados.setSolicitante(novoSolicitante);
 
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
         when(pedidoRepository.save(pedido)).thenReturn(pedido);
@@ -131,7 +133,7 @@ class PedidoServiceTest {
         assertEquals("Novo Pedido", atualizado.getTitulo());
         assertEquals("Nova descrição", atualizado.getDescricao());
         assertEquals(Categoria.ELETRONICOS, atualizado.getCategoria());
-        assertEquals(novoSolicitante, atualizado.getSolicitante());
+        assertEquals(usuario, atualizado.getSolicitante());
 
         verify(pedidoRepository).save(pedido);
     }
@@ -149,6 +151,7 @@ class PedidoServiceTest {
     void test_deletar_com_id_inexistente_deve_lancar_exception() {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> pedidoService.deletar(1L));
+        assertThrows(ResourceNotFoundException.class,
+                () -> pedidoService.deletar(1L));
     }
 }

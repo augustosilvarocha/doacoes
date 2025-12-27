@@ -112,6 +112,14 @@ O sistema possui 4 entidades principais:
 - Interface interativa: `http://localhost:8080/api/swagger-ui/index.html`
 - Especificação OpenAPI: `http://localhost:8080/api/docs`
 
+## Executando os testes
+
+Para rodar os testes automatizados do projeto, execute:
+
+```bash
+.\mvnw.cmd test 
+```
+
 ## Autor
 
 **José Augusto da Silva Rocha** - IFRN

@@ -1,9 +1,11 @@
 package augusto.rocha.ifrn.edu.br.doacoes.service;
 
+import augusto.rocha.ifrn.edu.br.doacoes.exception.ResourceNotFoundException;
 import augusto.rocha.ifrn.edu.br.doacoes.model.Endereco;
 import augusto.rocha.ifrn.edu.br.doacoes.model.Item;
 import augusto.rocha.ifrn.edu.br.doacoes.model.Pedido;
 import augusto.rocha.ifrn.edu.br.doacoes.model.Usuario;
+import augusto.rocha.ifrn.edu.br.doacoes.model.enums.Perfil;
 import augusto.rocha.ifrn.edu.br.doacoes.repository.ItemRepository;
 import augusto.rocha.ifrn.edu.br.doacoes.repository.PedidoRepository;
 import augusto.rocha.ifrn.edu.br.doacoes.repository.UsuarioRepository;
@@ -13,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,19 +51,28 @@ class UsuarioServiceTest {
         usuario.setId(1L);
         usuario.setNome("João");
         usuario.setEmail("joao@email.com");
-        usuario.setSenha("123");
+        usuario.setSenha("123456");
         usuario.setTelefone("9000-0000");
         usuario.setEndereco(endereco);
+        usuario.setPerfil(Perfil.AMBOS);
     }
 
     @Test
     void criar_DeveSalvarUsuario() {
-        when(usuarioRepository.save(usuario)).thenReturn(usuario);
+        Usuario novo = new Usuario();
+        novo.setNome("João");
+        novo.setEmail("joao@email.com");
+        novo.setSenha("senha123");
+        novo.setPerfil(Perfil.AMBOS);
 
-        Usuario resultado = usuarioService.criar(usuario);
+        when(usuarioRepository.findByEmail(any())).thenReturn(null);
+        when(usuarioRepository.save(any())).thenReturn(novo);
 
-        assertEquals(usuario, resultado);
-        verify(usuarioRepository, times(1)).save(usuario);
+        Usuario resultado = usuarioService.criar(novo);
+
+        assertNotNull(resultado);
+        assertEquals("João", resultado.getNome());
+        verify(usuarioRepository).save(novo);
     }
 
     @Test
@@ -79,7 +89,7 @@ class UsuarioServiceTest {
     void buscaPorId_Existente_DeveRetornarUsuario() {
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
 
-        Usuario encontrado = usuarioService.buscaPorId(1L);
+        Usuario encontrado = usuarioService.buscarPorId(1L);
 
         assertEquals(usuario, encontrado);
     }
@@ -88,7 +98,8 @@ class UsuarioServiceTest {
     void buscaPorId_Inexistente_DeveLancarException() {
         when(usuarioRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> usuarioService.buscaPorId(1L));
+        assertThrows(ResourceNotFoundException.class,
+                () -> usuarioService.buscarPorId(1L));
     }
 
     @Test
@@ -123,18 +134,19 @@ class UsuarioServiceTest {
         Usuario novosDados = new Usuario();
         novosDados.setNome("Novo Nome");
         novosDados.setEmail("novo@email.com");
-        novosDados.setSenha("321");
+        novosDados.setSenha("654321");
         novosDados.setTelefone("98888-8888");
         novosDados.setEndereco(novoEndereco);
 
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.findByEmail(any())).thenReturn(null);
         when(usuarioRepository.save(usuario)).thenReturn(usuario);
 
         Usuario atualizado = usuarioService.atualizar(1L, novosDados);
 
         assertEquals("Novo Nome", atualizado.getNome());
         assertEquals("novo@email.com", atualizado.getEmail());
-        assertEquals("321", atualizado.getSenha());
+        assertEquals("654321", atualizado.getSenha());
         assertEquals("98888-8888", atualizado.getTelefone());
         assertEquals("Rua Nova", atualizado.getEndereco().getRua());
 
@@ -144,16 +156,19 @@ class UsuarioServiceTest {
     @Test
     void deletar_Existente_DeveDeletar() {
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
+        when(pedidoRepository.findBySolicitante(usuario)).thenReturn(List.of());
+        when(itemRepository.findByDoador(usuario)).thenReturn(List.of());
 
         usuarioService.deletar(1L);
 
-        verify(usuarioRepository).delete(usuario);
+        verify(usuarioRepository).deleteById(1L);
     }
 
     @Test
     void deletar_Inexistente_DeveLancarException() {
         when(usuarioRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> usuarioService.deletar(1L));
+        assertThrows(ResourceNotFoundException.class,
+                () -> usuarioService.deletar(1L));
     }
 }

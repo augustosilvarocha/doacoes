@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -85,7 +84,8 @@ class MatchServiceTest {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
         when(itemRepository.findById(2L)).thenReturn(Optional.of(item));
 
-        assertThrows(ResponseStatusException.class, () -> matchService.criar(1L, 2L));
+        assertThrows(IllegalStateException.class,
+                () -> matchService.criar(1L, 2L));
     }
 
     @Test
@@ -95,7 +95,8 @@ class MatchServiceTest {
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
         when(itemRepository.findById(2L)).thenReturn(Optional.of(item));
 
-        assertThrows(ResponseStatusException.class, () -> matchService.criar(1L, 2L));
+        assertThrows(IllegalArgumentException.class,
+                () -> matchService.criar(1L, 2L));
     }
 
     @Test
@@ -104,6 +105,7 @@ class MatchServiceTest {
         when(itemRepository.findById(2L)).thenReturn(Optional.of(item));
         when(matchRepository.existsByItemIdAndStatus(2L, StatusMatch.PENDENTE)).thenReturn(true);
 
-        assertThrows(ResponseStatusException.class, () -> matchService.criar(1L, 2L));
+        assertThrows(IllegalStateException.class,
+                () -> matchService.criar(1L, 2L));
     }
 }

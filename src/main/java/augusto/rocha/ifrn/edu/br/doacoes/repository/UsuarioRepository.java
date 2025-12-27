@@ -9,4 +9,5 @@ import java.util.List;
 public interface UsuarioRepository extends JpaRepository<Usuario,Long> {
     List<Usuario> findByNomeContainingIgnoreCase(String nome);
     List<Usuario> findByPerfil(Perfil perfil);
+    Usuario findByEmail(String email);
 }

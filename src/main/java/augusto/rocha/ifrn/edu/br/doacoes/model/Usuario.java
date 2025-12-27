@@ -7,7 +7,7 @@ import jakarta.validation.constraints.*;
 
 @Data
 @Entity
-@Table(name = "usuario")
+@Table(name = "tb_usuario")
 public class Usuario {
 
     @Id
