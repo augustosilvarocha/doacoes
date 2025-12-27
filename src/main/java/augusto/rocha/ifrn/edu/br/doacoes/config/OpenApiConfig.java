@@ -19,7 +19,7 @@ public class OpenApiConfig {
                         .version("v1.0")
                         .contact(new Contact()
                                 .name("Augusto Rocha")
-                                .email("seuemail@exemplo.com")
+                                .email("rocha.augusto@escolar.edu.ifrn.br")
                         )
                 );
     }
